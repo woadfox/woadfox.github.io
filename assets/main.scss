@@ -3,8 +3,6 @@
 ---
 
 // Use @import for compatibility with GitHub Pages (libsass)
-@import "dark";
 @import "base";
 @import "art";
-
-@include theme();
+@import "themes";

@@ -2,21 +2,39 @@
  * Console chrome: ANSI art header
  */
 
-/* Art colors default to the current palette; themed schemes override the
-   --art-* variables (stage 3). */
-:root {
-  --art-hi: var(--text-color);
-  --art-dim: rgba(219, 219, 219, 0.45);
-  --art-glow: var(--text-color);
-  --art-shade: rgba(219, 219, 219, 0.75);
-}
+/* Art colors come from the --art-* variables set per palette in _themes.scss */
+
+/* Footer nav — right-aligned (footer's default text-align), same link/hover
+   treatment as the header menu but no border/left-align/bottom-margin */
+.footer-menu { margin: 0;  padding: 0;  list-style-type: none; }
+.footer-menu li { display: inline;  margin-left: 14px; }
+.footer-menu li a { text-decoration: none;  color: var(--text-color); }
+.footer-menu li a:hover { text-decoration: none;  color: var(--background-color);  background-color: var(--base-color); }
+.footer-menu li:before { content: none !important; } /* override base.scss's list-dash bullet */
+
+/* Header control buttons — plain text, styled like the menu links */
+.menu ul { overflow: hidden; } /* contain the floated controls */
+.menu ul li.ctl { float: right;  margin-right: 0;  margin-left: 14px; }
+.menu ul li button { background: none;  border: none;  padding: 0;  margin: 0;  font-family: inherit;  font-size: inherit;  line-height: inherit;  color: var(--text-color);  cursor: pointer; }
+.menu ul li button:hover { color: var(--background-color);  background-color: var(--base-color); }
 
 /* ANSI art — glyph density (█▓▒░▄▀) carries the shading, so every scheme
    only ever recolors text; ANSI background colors are never reproduced. */
+/* cursor/user-select: the art is decoration, not text — stops the browser
+   showing an oversized I-beam caret over the big glyph blocks */
+.ansi-art { cursor: default;  -webkit-user-select: none;  user-select: none; }
+
 /* !important needed: base.scss pre rule sets font-family/line-height with !important */
-.ansi-art { font-family: "Menlo", "Consolas", "DejaVu Sans Mono", monospace !important;  font-size: clamp(6px, 2.1vw, 15px);  line-height: 1 !important;  white-space: pre;  overflow-x: auto;  margin: 25px 0 4px;  color: var(--art-dim); }
+/* width:fit-content shrink-wraps the block to its widest line so margin:auto
+   centers it as a unit, while text within stays left-aligned — centering
+   each line independently would break the row-to-row pixel alignment.
+   (display:table was tried first but breaks the pre's line-width calc.) */
+/* font-size uses min() with no lower bound so the art always scales down to
+   fit its container — never overflows, so there is no scrollbar to show.
+   overflow:hidden is a belt-and-braces guard against sub-pixel rounding. */
+.ansi-art { width: fit-content;  font-family: "Menlo", "Consolas", "DejaVu Sans Mono", monospace !important;  font-size: min(2.1vw, 15px);  line-height: 1 !important;  white-space: pre;  overflow: hidden;  max-width: 100%;  margin: 25px auto 4px;  color: var(--art-dim);  background-color: transparent; }
 /* base.scss forces * { font-size: 12px !important } on small screens; keep the art scaling */
-@media only screen and (max-device-width: 500px) { .ansi-art, .ansi-art span { font-size: clamp(6px, 2.1vw, 15px) !important; } }
+@media only screen and (max-device-width: 500px) { .ansi-art, .ansi-art span { font-size: min(2.1vw, 15px) !important; } }
 .ansi-art .a-hi { color: var(--art-hi); }
 .ansi-art .a-dim { color: var(--art-dim); }
 .ansi-art .a-glow { color: var(--art-glow); }

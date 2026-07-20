@@ -1,0 +1,168 @@
+/**
+ * Palettes: [data-mode] sets polarity + syntax-highlight colors,
+ * [data-mode][data-scheme] layers scheme accents on top.
+ * Modes: dark / light.  Schemes: basic (mono) / woad (natural-dye pastels
+ * from colors.txt) / pride (vibrant rainbow).
+ * theme.js stamps the attributes on <html> before first paint.
+ */
+
+/* woad — denim fade + green accent, generated at runtime by theme.js */
+
+/* pride — TAAG "rainbow3" 12-color ramps (patorjk.com/software/taag,
+   ColorStripes filter): neon ramp on dark, darkened ramp on light */
+$r3-dark: rgb(255, 40, 40), rgb(255, 120, 0), rgb(255, 180, 0), rgb(255, 220, 0), rgb(220, 255, 0), rgb(120, 255, 0), rgb(0, 255, 80), rgb(0, 255, 160), rgb(0, 200, 255), rgb(0, 120, 255), rgb(120, 80, 255), rgb(255, 0, 200);
+
+/* build a hard-stop repeating diagonal from a 12-color list */
+@function stripes($colors, $band, $angle: 135deg) {
+  $stops: ();
+  $i: 0;
+  @each $c in $colors {
+    $stops: append($stops, $c $i * $band ($i + 1) * $band, comma);
+    $i: $i + 1;
+  }
+  @return repeating-linear-gradient($angle, $stops);
+}
+
+/* Fallback if theme.js can't generate the blob fields: flat denim */
+$woad-fallback: linear-gradient(#7b99b0, #7b99b0);
+$pride-stripes-dark: stripes($r3-dark, 12px);
+
+/**
+ * dark mode (default — applies with or without the attribute)
+ */
+:root {
+  --base-color: #DEDFD2; /* faintly creamy yellow-green white */
+  --border: dashed 3px rgba(222, 223, 210, 0.9);
+  --selection-background: rgba(222, 223, 210, 0.99);
+  --selection-text: #000;
+  --background-color: #000;
+  --text-color: var(--base-color);
+  --placeholder-color: var(--base-color);
+  --link-color: #88B5D2; /* distinct from text, legible on black, all schemes */
+  --art-hi: var(--text-color);
+  --art-dim: rgba(219, 219, 219, 0.45);
+  --art-glow: var(--text-color);
+  --art-shade: rgba(219, 219, 219, 0.75);
+  --code-color-1: #aaaaaa;
+  --code-color-2: #ffffcc;
+  --code-color-3: #F00000;
+  --code-color-4: #F0A0A0;
+  --code-color-5: #b38aff;
+  --code-color-6: #5ba711;
+  --code-color-7: #e4e477;
+  --code-color-8: #000080;
+  --code-color-9: #05ca05;
+  --code-color-10: #888888;
+  --code-color-11: #555555;
+  --code-color-12: #800080;
+  --code-color-13: #00d4d4;
+  --code-color-14: #00c1c1;
+  --code-color-15: #ed9d13;
+  --code-color-16: #1e90ff;
+  --code-color-17: #800000;
+  --code-color-18: #bbbbbb;
+}
+
+/**
+ * light mode — polarity flip + light syntax set
+ */
+html[data-mode="light"] {
+  --base-color: #000;
+  --border: dashed 3px rgba(0, 0, 0, 1);
+  --selection-background: rgba(0, 0, 0, 0.99);
+  --selection-text: #FFF;
+  --background-color: #FCFDF4; /* faintly creamy yellow-green white */
+  --text-color: var(--base-color);
+  --placeholder-color: var(--base-color);
+  --link-color: #28418d; /* distinct from text, legible on light washes, all schemes */
+  --art-hi: #141414;
+  --art-dim: rgba(0, 0, 0, 0.45);
+  --art-glow: #141414;
+  --art-shade: rgba(0, 0, 0, 0.7);
+  --code-color-5: #0000aa;
+  --code-color-6: #4c8317;
+  --code-color-7: #aa0000;
+  --code-color-9: #00aa00;
+  --code-color-13: #00aaaa;
+  --code-color-14: #009999;
+  --code-color-15: #aa5500;
+}
+
+/**
+ * dark + woad — pastel rainbow on black, fade on art + headings
+ */
+html[data-mode="dark"][data-scheme="woad"] {
+  --selection-background: #334da8;
+  --selection-text: #FFF;
+}
+/* Random blob fields (--woad-blobs-*) are generated per page load by
+   theme.js — layered radial gradients, à la
+   justinjay.wang/methods-for-random-gradients. Flat denim is the fallback. */
+html[data-mode="dark"][data-scheme="woad"] .ansi-art {
+  --art-hi: transparent;  --art-dim: transparent;  --art-glow: transparent;  --art-shade: transparent;
+  color: transparent;
+  background-image: var(--woad-blobs-dark, #{$woad-fallback});
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-mode="dark"][data-scheme="woad"] h1,
+html[data-mode="dark"][data-scheme="woad"] h2 {
+  display: inline-block;
+  background-image: var(--woad-blobs-dark, #{$woad-fallback});
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/**
+ * dark + pride — vibrant rainbow on black, flag stripes on art
+ */
+html[data-mode="dark"][data-scheme="pride"] {
+  --selection-background: rgb(255, 0, 200);
+  --selection-text: #000;
+}
+html[data-mode="dark"][data-scheme="pride"] .ansi-art {
+  --art-hi: transparent;  --art-dim: transparent;  --art-glow: transparent;  --art-shade: transparent;
+  color: transparent;
+  background-image: $pride-stripes-dark;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-mode="dark"][data-scheme="pride"] h1,
+html[data-mode="dark"][data-scheme="pride"] h2 {
+  display: inline-block;
+  background-image: $pride-stripes-dark;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/**
+ * light + woad — the colors become the background (soft pastel wash),
+ * near-black ink on top; code blocks sit on a solid warm white
+ */
+html[data-mode="light"][data-scheme="woad"] {
+  --background-color: #F7F9FB;
+  --selection-background: #28418d;
+  --selection-text: #FFF;
+  --art-hi: #000;  --art-dim: #000;  --art-glow: #000;  --art-shade: #000;
+}
+html[data-mode="light"][data-scheme="woad"] body {
+  background-image: var(--woad-blobs-light, #{$woad-fallback});
+  background-attachment: fixed;
+}
+
+/**
+ * light + pride — lightened flag tints as the wash, vibrant stripes on the art
+ */
+/* light + pride — solid black art over the full-vibrancy rainbow3 ramp */
+html[data-mode="light"][data-scheme="pride"] {
+  --background-color: #FCFDF4;
+  --selection-background: rgb(140, 0, 120);
+  --selection-text: #FFF;
+  --art-hi: #000;  --art-dim: #000;  --art-glow: #000;  --art-shade: #000;
+}
+html[data-mode="light"][data-scheme="pride"] body {
+  background-image: stripes($r3-dark, 16px);
+  background-attachment: fixed;
+}

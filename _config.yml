@@ -14,9 +14,10 @@ plugins:
 header_pages:
   - index.markdown
   - about.markdown
-  - ref_sheet.markdown
   - projects.markdown
-  - poems.markdown
+
+# Footer navigation (order matters)
+footer_pages:
   - links.markdown
 
 # Content collections
@@ -49,6 +50,7 @@ defaults:
 exclude:
   - "Screenshot 2026-07-19 at 02.23.12.png"
   - "IMG_3910-scaled.webp"
+  - "84e6b76620b389f18db65a14f8b4935b-1940080943.jpg"
 
 # Theme options (vendored jekyll-theme-console)
 # style: dark # handled by the in-page switcher from stage 3 onward
