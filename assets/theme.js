@@ -1,10 +1,11 @@
-/* Theme switcher: stamps data-mode / data-scheme on <html> before first
-   paint (this file is loaded synchronously in <head>), persists choices,
-   and wires the two header buttons. External file because the site CSP
-   only allows script-src 'self'. */
+/* Theme switcher: stamps data-mode / data-scheme / data-grain on <html>
+   before first paint (this file is loaded synchronously in <head>),
+   persists choices, and wires the three header buttons. External file
+   because the site CSP only allows script-src 'self'. */
 (function () {
   var MODES = ["dark", "light"];
   var SCHEMES = ["basic", "woad", "pride"];
+  var GRAINS = ["off", "on"];
   var root = document.documentElement;
 
   function stored(key, fallback, allowed) {
@@ -18,8 +19,10 @@
 
   var mode = stored("wf-mode", "dark", MODES);
   var scheme = stored("wf-scheme", "basic", SCHEMES);
+  var grain = stored("wf-grain", "off", GRAINS);
   root.setAttribute("data-mode", mode);
   root.setAttribute("data-scheme", scheme);
+  root.setAttribute("data-grain", grain);
 
   /* Random blob fields for the woad scheme — layered radial gradients with
      random position/size/color, following
@@ -27,9 +30,9 @@
      load and each time the scheme cycles back to woad. Dark mode's art
      reuses the same generator/palette as the light-mode page background.
      Palette: a denim fade — raw indigo through stonewash, no white. */
-  var WOAD_DENIM = ["#4E6E9E", "#6B8CB8", "#7b99b0", "#6c9898", "#8FAECB", "#B4C9DE"];
-  var WOAD_ACCENT = "#9AD4B0";   // the green from colors.txt
-  var WOAD_BASE = "#7b99b0";     // solid denim base
+  var WOAD_DENIM = ["#7B99B0", "#6C9898", "#56ADCF", "#7EC3D2"];
+  var WOAD_ACCENT = "#8C9A91";   // the green from colors.txt
+  var WOAD_BASE = "#7B99B0";     // solid denim base
 
   function rand(min, max) { return min + Math.random() * (max - min); }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -59,9 +62,12 @@
   }
   regenWoad();
 
+  function grainLabel() { return grain === "on" ? "grain" : "no grain"; }
+
   document.addEventListener("DOMContentLoaded", function () {
     var modeBtn = document.getElementById("mode-btn");
     var schemeBtn = document.getElementById("scheme-btn");
+    var grainBtn = document.getElementById("grain-btn");
 
     if (modeBtn) {
       modeBtn.textContent = mode;
@@ -80,6 +86,15 @@
         root.setAttribute("data-scheme", scheme);
         store("wf-scheme", scheme);
         schemeBtn.textContent = scheme;
+      });
+    }
+    if (grainBtn) {
+      grainBtn.textContent = grainLabel();
+      grainBtn.addEventListener("click", function () {
+        grain = grain === "on" ? "off" : "on";
+        root.setAttribute("data-grain", grain);
+        store("wf-grain", grain);
+        grainBtn.textContent = grainLabel();
       });
     }
   });

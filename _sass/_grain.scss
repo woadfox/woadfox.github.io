@@ -1,0 +1,26 @@
+/**
+ * Paper grain overlay — an SVG feTurbulence field tiled over the whole
+ * viewport, toggled by the header button (data-grain on <html>).
+ * Independent of mode and scheme, so it layers over all 6 palettes.
+ */
+
+/* fractalNoise desaturated to grey so it reads as paper tooth, not colour
+   static; stitchTiles keeps the 120px tile seamless when repeated.
+   The gamma curve on alpha crushes the low end so the field is sparse
+   specks rather than a solid mid-grey sheet — without it the overlay
+   reads as a flat wash over the page instead of texture. */
+$grain-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='gamma' exponent='2' amplitude='1' offset='0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+.grain { display: none;  position: fixed;  inset: 0;  z-index: 50;  pointer-events: none;  background-image: $grain-svg; }
+
+html[data-grain="on"] .grain { display: block; }
+
+/* Blend per mode: `screen` lifts the specks off pure black (overlay and
+   soft-light are invisible against #000); `soft-light` textures the light
+   palettes without the uniform darkening that `multiply` produces. */
+html[data-mode="dark"] .grain { mix-blend-mode: screen;  opacity: 0.1; }
+html[data-mode="light"] .grain { mix-blend-mode: soft-light;  opacity: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .grain { transition: opacity 0.25s ease; }
+}
