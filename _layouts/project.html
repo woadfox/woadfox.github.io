@@ -1,0 +1,14 @@
+---
+layout: default
+---
+
+<article class="project">
+  <h1>{{ page.title | escape }}</h1>
+  {%- if page.date -%}
+  <p class="meta">[ {{ page.date | date: "%Y-%m-%d" }} ]{% if page.status %} {{ page.status }}{% endif %}</p>
+  {%- endif -%}
+  {{ content }}
+  {%- if page.repo -%}
+  <p><a href="{{ page.repo }}">source</a></p>
+  {%- endif -%}
+</article>
