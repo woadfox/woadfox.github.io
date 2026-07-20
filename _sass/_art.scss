@@ -1,0 +1,23 @@
+/**
+ * Console chrome: ANSI art header
+ */
+
+/* Art colors default to the current palette; themed schemes override the
+   --art-* variables (stage 3). */
+:root {
+  --art-hi: var(--text-color);
+  --art-dim: rgba(219, 219, 219, 0.45);
+  --art-glow: var(--text-color);
+  --art-shade: rgba(219, 219, 219, 0.75);
+}
+
+/* ANSI art — glyph density (█▓▒░▄▀) carries the shading, so every scheme
+   only ever recolors text; ANSI background colors are never reproduced. */
+/* !important needed: base.scss pre rule sets font-family/line-height with !important */
+.ansi-art { font-family: "Menlo", "Consolas", "DejaVu Sans Mono", monospace !important;  font-size: clamp(6px, 2.1vw, 15px);  line-height: 1 !important;  white-space: pre;  overflow-x: auto;  margin: 25px 0 4px;  color: var(--art-dim); }
+/* base.scss forces * { font-size: 12px !important } on small screens; keep the art scaling */
+@media only screen and (max-device-width: 500px) { .ansi-art, .ansi-art span { font-size: clamp(6px, 2.1vw, 15px) !important; } }
+.ansi-art .a-hi { color: var(--art-hi); }
+.ansi-art .a-dim { color: var(--art-dim); }
+.ansi-art .a-glow { color: var(--art-glow); }
+.ansi-art .a-shade { color: var(--art-shade); }

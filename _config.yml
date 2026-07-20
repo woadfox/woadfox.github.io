@@ -14,8 +14,10 @@ plugins:
 header_pages:
   - index.markdown
   - about.markdown
+  - ref_sheet.markdown
   - projects.markdown
   - poems.markdown
+  - links.markdown
 
 # Content collections
 collections:
